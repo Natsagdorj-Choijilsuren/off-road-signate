@@ -36,7 +36,7 @@ def train_model(model, device, loader, criterion, optimizer, epochs,
     for epoch in range(epochs):
         print (epoch)
 
-        for imgs, masks in tqdm(loader):
+        for imgs, masks in loader:
 
             imgs = imgs.to(device)
             masks = masks.to(device)
@@ -70,7 +70,7 @@ if __name__ == '__main__':
 
     train_loader = get_loader(image_folder=args.image_folder, anno_folder=args.anno_folder,
                               num_batches=args.batch_size)
-
+    
     optimizer = Adam(model.parameters(), lr=args.learning_rate)
 
     train_model(model, device, train_loader, criterion, optimizer, args.epoch_num,
