@@ -151,6 +151,4 @@ if __name__ == '__main__':
 
     batch_x, batch_y = next(iter(loader))
 
-    print (batch_y.shape)
-    print (batch_y)
     
