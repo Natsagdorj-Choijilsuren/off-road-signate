@@ -141,12 +141,6 @@ class TrainLoader(Dataset):
             #x, y = np.where(np.array(pil_image))
             x, y = np.where((np.array(label)==categories[category]).sum(axis=2)==3)
             ret_array[y, x] = classes[category]
-
-        print ('input image shape ')
-        print (img.size)
-
-        print ('input label shape')
-        print (ret_array.shape)
         
         return img, ret_array
 
