@@ -8,6 +8,53 @@ from PIL import Image
 transform = transforms.Compose([transforms.ToTensor()])
 
 
+categories = {
+    'road': [128, 64, 128],
+    'dirt road': [255, 128, 128],
+    'parking lot': [190, 153, 153],
+    'driveway': [102, 102, 156],
+    'other road marking': [152, 251, 152],
+    'rail': [255, 0, 0],
+    'lane boundary': [0, 60, 100],
+    'other lane marking': [0, 80, 100],
+    'puddle': [120, 240, 120],
+    'rut': [128, 0, 255],
+    'other obstacles': [0, 0, 70],
+    'sky': [70, 130, 180],
+    'person': [220, 20, 60],
+    'two wheel venicle': [119, 11, 32],
+    'car': [0, 0, 142],
+    'traffic sign': [220, 220, 0],
+    'building': [70, 70, 70],
+    'crack': [90, 120, 130],
+    'snow': [255, 255, 255]
+}
+
+
+classes = {
+    'background': 0,
+    'road': 1, 
+    'dirt road': 2,
+    'parking lot': 3,
+    'driveway': 4,
+    'other road marking': 5,
+    'rail': 6, 
+    'lane boundary': 7,
+    'other lane marking': 8, 
+    'puddle': 9, 
+    'rut': 10,
+    'other obstacles': 11, 
+    'sky': 12,
+    'person': 13, 
+    'two wheel venicle': 14,
+    'car': 15, 
+    'traffic sign': 16,
+    'building': 17,
+    'crack': 18,
+    'snow': 19
+}
+
+
 def get_number_file(image_name):
     return image_name.split('_')[-1]
 
@@ -44,6 +91,7 @@ class TrainLoader(Dataset):
                 
                 image_paths.append((image_path, anno_path))
 
+        '''
         for b_fold in self.B_folders:
             image_folder = os.path.join(self.image_root, b_fold)
             
@@ -56,7 +104,7 @@ class TrainLoader(Dataset):
                 anno_path = os.path.join(anno_folder_B, 'train_annotation_' + number_str)
                 image_path = os.path.join(image_folder, image_name)
                 image_paths.append((image_path, anno_path))
-                
+        '''
         return  image_paths
 
     def __len__(self):
@@ -70,9 +118,21 @@ class TrainLoader(Dataset):
         
         if self.transform:
             img = self.transform(img)
-            label = self.transform(label)
+            label = TrainLoader.preprocess_image(label)
             
         return (img, label)
+
+    @staticmethod
+    def preprocess_image(pil_image):
+        
+        width, height = np.array(pil_image).shape[:2]
+        ret_array = np.zeros((width, height), dtype=np.int64)
+        for category in categories:
+            #x, y = np.where(np.array(pil_image))
+            x, y = np.where((np.array(pil_image)==categories[category]).sum(axis=2)==3)
+            ret_array[x, y] = classes[category]
+
+        return ret_array
 
     
 def get_loader(image_folder, anno_folder, num_batches):
@@ -86,7 +146,11 @@ def get_loader(image_folder, anno_folder, num_batches):
 if __name__ == '__main__':
 
     loader = get_loader(image_folder='../image_data', anno_folder='../annotation_data',
-                        num_batches=10)
+                        num_batches=2)
 
-    for x in loader:
-        print (x)
+
+    batch_x, batch_y = next(iter(loader))
+
+    print (batch_y.shape)
+    print (batch_y)
+    
