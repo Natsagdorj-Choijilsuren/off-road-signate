@@ -117,15 +117,14 @@ class TrainLoader(Dataset):
     def __getitem__(self, idx):
         img_path, label_path = self.paths[idx]
         
-        img, label = TrainLoader.preprocess_image(img_path,
-                                                  label_path)        
+        img, label = self.preprocess_image(img_path,
+                                           label_path)        
         if self.transform:
             img = self.transform(img)
 
         return (img, label)
 
-    @staticmethod
-    def preprocess_image(img_path, label_path):
+    def preprocess_image(self, img_path, label_path):
         
         img = Image.open(img_path)
         label = Image.open(label_path)
