@@ -41,10 +41,15 @@ def train_model(model, device, loader, criterion, optimizer, epochs,
             imgs = imgs.to(device)
             masks = masks.to(device)
 
+            print ('input tensor shape ')
+            print (imgs.shape)
 
-            
+                        
             out = model(imgs)['out']
 
+            print ('model output shape ')
+            print (out.shape)
+            
             loss = criterion(out, masks)
             print (loss)
             
