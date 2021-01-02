@@ -43,8 +43,8 @@ def train_model(model, device, loader, criterion, optimizer, epochs,
 
             out = model(imgs)['out']
             loss = criterion(out, masks)
-
-
+            print (loss)
+            
             optimizer.zero_grad()
 
             loss.backward()
