@@ -122,6 +122,9 @@ class TrainLoader(Dataset):
         if self.transform:
             img = self.transform(img)
 
+        print ('from dataloader image size')
+        print (img.size)
+        
         return (img, label)
 
     def preprocess_image(self, img_path, label_path):
