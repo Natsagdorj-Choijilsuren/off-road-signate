@@ -141,7 +141,7 @@ class TrainLoader(Dataset):
             #x, y = np.where(np.array(pil_image))
             x, y = np.where((np.array(label)==categories[category]).sum(axis=2)==3)
             print (x, y)
-            ret_array[x, y] = classes[category]
+            ret_array[y, x] = classes[category]
 
         return img, ret_array
 
