@@ -5,7 +5,9 @@ from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms
 from PIL import Image
 
-transform = transforms.Compose([transforms.ToTensor()])
+transform = transforms.Compose([transforms.ToTensor(),
+                                transforms.Normalize(mean= [0.485, 0.456, 0.406],
+                                                     std=[0.229, 0.224, 0.225])])
 
 
 categories = {
@@ -67,9 +69,11 @@ class TrainLoader(Dataset):
         self.anno_root = anno_folder
         self.A_folders = ['train_images_A_0', 'train_images_A_1', 'train_images_A_2']
         self.B_folders = ['train_images_B_0', 'train_images_B_1', 'train_images_B_2']
+
+        self.image_width = int(1080/5)
+        self.image_height = int(1980/5)
         
         self.transform = transform
-        
         self.paths = self.get_file_paths()
         
     def get_file_paths(self):
@@ -113,26 +117,32 @@ class TrainLoader(Dataset):
     def __getitem__(self, idx):
         img_path, label_path = self.paths[idx]
         
-        img = Image.open(img_path)
-        label = Image.open(label_path)
-        
+        img, label = TrainLoader.preprocess_image(img_path,
+                                                  label_path)        
         if self.transform:
             img = self.transform(img)
-            label = TrainLoader.preprocess_image(label)
-            
+
         return (img, label)
 
     @staticmethod
-    def preprocess_image(pil_image):
+    def preprocess_image(img_path, label_path):
         
-        width, height = np.array(pil_image).shape[:2]
-        ret_array = np.zeros((width, height), dtype=np.int64)
+        img = Image.open(img_path)
+        label = Image.open(label_path)
+
+        img = img.resize((self.image_width, self.image_height),
+                         Image.ANTIALIAS)
+        label = label.resize((self.image_width, self.image_height),
+                             Image.NEAREST)
+        
+        
+        ret_array = np.zeros((self.image_width, self.image_height), dtype=np.int64)
         for category in categories:
             #x, y = np.where(np.array(pil_image))
             x, y = np.where((np.array(pil_image)==categories[category]).sum(axis=2)==3)
             ret_array[x, y] = classes[category]
 
-        return ret_array
+        return img, ret_array
 
     
 def get_loader(image_folder, anno_folder, num_batches):
@@ -146,9 +156,10 @@ def get_loader(image_folder, anno_folder, num_batches):
 if __name__ == '__main__':
 
     loader = get_loader(image_folder='../image_data', anno_folder='../annotation_data',
-                        num_batches=2)
+                        num_batches=20)
 
-
+    
     #batch_x, batch_y = next(iter(loader))
 
     print (len(loader))
+
