@@ -138,7 +138,7 @@ class TrainLoader(Dataset):
 def get_loader(image_folder, anno_folder, num_batches):
     dataset_torch = TrainLoader(image_folder, anno_folder, transform=transform)
     loader = DataLoader(dataset_torch, batch_size=num_batches, shuffle=True,
-                        num_workers=8)
+                        num_workers=4)
                         
     return loader
 
@@ -149,6 +149,6 @@ if __name__ == '__main__':
                         num_batches=2)
 
 
-    batch_x, batch_y = next(iter(loader))
+    #batch_x, batch_y = next(iter(loader))
 
-    
+    print (len(loader))
