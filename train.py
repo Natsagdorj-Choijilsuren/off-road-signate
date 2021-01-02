@@ -36,7 +36,7 @@ def train_model(model, device, loader, criterion, optimizer, epochs,
     for epoch in epochs:
         print (epoch)
 
-        for imgs, masks im tqdm(loader):
+        for imgs, masks in tqdm(loader):
 
             imgs = imgs.to(device)
             masks = masks.to(device)
