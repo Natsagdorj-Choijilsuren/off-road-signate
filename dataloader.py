@@ -133,12 +133,14 @@ class TrainLoader(Dataset):
                          Image.ANTIALIAS)
         label = label.resize((self.image_width, self.image_height),
                              Image.NEAREST)
-        
+
+        print (self.image_width, self.image_height)
         
         ret_array = np.zeros((self.image_width, self.image_height), dtype=np.int64)
         for category in categories:
             #x, y = np.where(np.array(pil_image))
             x, y = np.where((np.array(label)==categories[category]).sum(axis=2)==3)
+            print (x, y)
             ret_array[x, y] = classes[category]
 
         return img, ret_array
