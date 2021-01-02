@@ -128,20 +128,26 @@ class TrainLoader(Dataset):
         
         img = Image.open(img_path)
         label = Image.open(label_path)
-
+        
         
         img = img.resize((self.image_width, self.image_height),
                          Image.ANTIALIAS)
         label = label.resize((self.image_width, self.image_height),
                              Image.NEAREST)
 
-                
+        
         ret_array = np.zeros((self.image_width, self.image_height), dtype=np.int64)
         for category in categories:
             #x, y = np.where(np.array(pil_image))
             x, y = np.where((np.array(label)==categories[category]).sum(axis=2)==3)
             ret_array[y, x] = classes[category]
 
+        print ('input image shape ')
+        print (img.size)
+
+        print ('input label shape')
+        print (ret_array.shape)
+        
         return img, ret_array
 
     
