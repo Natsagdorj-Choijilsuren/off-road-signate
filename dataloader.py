@@ -134,8 +134,8 @@ class TrainLoader(Dataset):
 
     def preprocess_image(self, img_path, label_path):
         
-        img = Image.open(img_path)
-        label = Image.open(label_path)
+        img = Image.open(img_path).convert('RGB')
+        label = Image.open(label_path).convert('RGB')
         
         
         img = img.resize((self.image_width, self.image_height),
