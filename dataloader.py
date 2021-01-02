@@ -144,11 +144,11 @@ class TrainLoader(Dataset):
                              Image.NEAREST)
 
         
-        ret_array = np.zeros((self.image_width, self.image_height), dtype=np.int64)
+        ret_array = np.zeros((self.image_height, self.image_width), dtype=np.int64)
         for category in categories:
             #x, y = np.where(np.array(pil_image))
             x, y = np.where((np.array(label)==categories[category]).sum(axis=2)==3)
-            ret_array[y, x] = classes[category]
+            ret_array[x, y] = classes[category]
         
         return img, ret_array
 
