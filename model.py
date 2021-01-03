@@ -10,28 +10,25 @@ from torchvision.models.segmentation.deeplabv3 import DeepLabHead
 
 
 
-def get_deeplab_resnet_101(num_class):
+def get_deeplab_resnet_101(num_class, pretrained=True):
 
     model = models.segmentation.deeplabv3_resnet101(
-        pretrained=True, progress=True)
+        pretrained=pretrained, progress=True)
 
     model.classifier = DeepLabHead(2048, num_class)
 
     return model
 
 
-def get_deeplab_resnet_50(num_class):
+def get_deeplab_resnet_50(num_class, pretrained=True):
 
-    model = models.segmentation.deeplabv3_resnet50(pretrained=True,
+    model = models.segmentation.deeplabv3_resnet50(pretrained=pretrained,
                                                    progress=True)
     model.classifier = DeepLabHead(2048, num_class)
 
     return model
 
 #for this I wanna implement losses
-
-
-
 
 
 if __name__ == '__main__':
